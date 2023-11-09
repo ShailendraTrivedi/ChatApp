@@ -12,31 +12,24 @@ const SignUp = ({ setFlag }) => {
 
   const handleSubmit = async (values) => {
     try {
-      // Create a new user with email and password
       const response = await createUserWithEmailAndPassword(
         auth,
         values.userEmail,
         values.userPassword
       );
 
-      // Upload the user's profile image to Firebase Storage
       const storageRef = ref(storage, response.user.uid);
       const uploadTask = uploadBytesResumable(storageRef, userImg);
 
-      // Handle the upload completion and get the download URL
       uploadTask.on(
         "state_changed",
-        (snapshot) => {
-          // Upload progress, if needed
-        },
+        (snapshot) => {},
         (error) => {
           console.error("Error uploading image:", error);
         },
         async () => {
-          // Upload completed
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-          // Update the user's profile with their name and the download URL
           await updateProfile(response.user, {
             displayName: values.userName,
             photoURL: downloadURL,
@@ -60,7 +53,7 @@ const SignUp = ({ setFlag }) => {
   };
 
   return (
-    <div className="w-[40rem] h-[40rem] bg-[rgb(0,171,228)] rounded">
+    <div className="sm:w-[30rem] w-full bg-white rounded p-2 m-0">
       <Formik
         initialValues={{
           userName: "",
@@ -73,7 +66,7 @@ const SignUp = ({ setFlag }) => {
       >
         {() => (
           <Form className="flex flex-col gap-2 justify-center items-center sm:p-5 h-full w-full">
-            <div className="w-[25rem] min-h-[30rem] space-y-5 bg-white rounded p-5">
+            <div className="w-full h-full space-y-5 rounded p-5">
               <div className="text-3xl text-center font-bold">Register</div>
               <InputHelper
                 name="userName"
@@ -116,14 +109,15 @@ const SignUp = ({ setFlag }) => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="bg-[rgb(0,171,228)] p-2 w-[10rem] text-white"
+                  className="bg-[rgb(0,171,228)] p-2 text-white w-[10rem] text-center rounded cursor-pointer"
                 >
                   Register
                 </button>
               </div>
             </div>
+            <hr className="w-full border-2 border-[rgb(0,171,228)]" />
             <div
-              className="bg-white p-2  w-[10rem] text-center rounded cursor-pointer"
+              className="bg-[rgb(0,171,228)] p-2 text-white w-[10rem] text-center rounded cursor-pointer"
               onClick={() => setFlag(true)}
             >
               Login

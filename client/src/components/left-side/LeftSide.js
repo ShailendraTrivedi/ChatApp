@@ -40,7 +40,7 @@ const LeftSide = ({ chatting, handleSelectUser }) => {
             <input
               type="text"
               className="input w-full ps-10 p-2 rounded-full"
-              placeholder="Search"
+              placeholder="Search User Here..."
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
@@ -50,7 +50,7 @@ const LeftSide = ({ chatting, handleSelectUser }) => {
               <div
                 key={i}
                 onClick={() => {
-                  handleSelectUser(item);
+                  handleSelectUser(item, "user");
                 }}
                 className="flex gap-2 items-center px-5 w-full hover:bg-gray-200 rounded p-2"
               >

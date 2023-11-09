@@ -3,11 +3,13 @@ import NoChat from "./NoChat";
 import PersonalChat from "./PersonalChat";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase.config";
+import { AiOutlineArrowLeft } from "react-icons/ai";
 
-const RightSide = ({ selectedUser, chatting, setChatting }) => {
+const RightSide = ({ selectedUser, chatting, setChatting, setMobile }) => {
   const [message, setMessage] = useState([]);
-  const currentUser = JSON.parse(localStorage.getItem("uid"));
   const [idSelected, setIdSelected] = useState("");
+
+  const currentUser = JSON.parse(localStorage.getItem("uid"));
 
   useEffect(() => {
     const fetchChatMessages = async () => {
@@ -39,8 +41,13 @@ const RightSide = ({ selectedUser, chatting, setChatting }) => {
           <NoChat />
         </div>
       ) : (
-        <div className="w-full flex flex-col">
-          <div className="flex gap-2 items-center px-5 w-full bg-gray-200 rounded p-2">
+        <div className="w-full h-full flex flex-col">
+          <div className="flex gap-2 items-center sm:px-5 w-full bg-gray-200 rounded p-2">
+            <AiOutlineArrowLeft
+              onClick={() => setMobile(false)}
+              className="sm:hidden block"
+              size={25}
+            />
             <div className="relative h-12 w-12 rounded-full bg-black">
               <img src={selectedUser.userImg} alt={selectedUser.userName} />
               {selectedUser.online && (

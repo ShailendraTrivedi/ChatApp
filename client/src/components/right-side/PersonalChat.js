@@ -6,7 +6,7 @@ import {
   setDoc,
   updateDoc,
 } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineLink, AiOutlineSend } from "react-icons/ai";
 import { BsEmojiSmile } from "react-icons/bs";
 import { db, storage } from "../../firebase.config";
@@ -16,8 +16,9 @@ import { ref } from "firebase/database";
 const PersonalChat = ({ currentUser, idSelected, message }) => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
+  const ref = useRef();
 
-  // console.log({ currentUser, idSelected, message });
+  // console.log({ currentUser, idSelected , message });
 
   const handleSendMessage = async () => {
     if (text.trim() === "") {
@@ -27,10 +28,8 @@ const PersonalChat = ({ currentUser, idSelected, message }) => {
     try {
       const chatDocRef = doc(db, "chats", idSelected);
 
-      // Check if the document exists before updating
       const chatDocSnapshot = await getDoc(chatDocRef);
       if (!chatDocSnapshot.exists()) {
-        // Optionally, create the document if it doesn't exist
         await setDoc(chatDocRef, { messages: [] });
       }
 
@@ -41,7 +40,7 @@ const PersonalChat = ({ currentUser, idSelected, message }) => {
         uploadTask.on(
           "state_changed",
           (snapshot) => {
-            // Upload progress, if needed
+            // Upload progres s, if needed
           },
           (error) => {
             // console.error("Error uploading image:", error);
@@ -79,9 +78,14 @@ const PersonalChat = ({ currentUser, idSelected, message }) => {
     setImg(null);
   };
 
+  useEffect(() => {
+    const container = ref.current;
+    container.scrollTop = container.scrollHeight;
+  }, [message]);
+
   return (
-    <div className="flex flex-col justify-between h-full">
-      <div className="h-[32.5rem] py-1 px-2">
+    <div ref={ref} className="flex flex-col justify-between h-full">
+      <div className="sm:h-[32.5rem] h-[38rem] py-1 px-2">
         <div className="flex flex-col gap-2 h-full w-full overflow-y-scroll">
           {message.map((item, i) => {
             return (
@@ -101,15 +105,23 @@ const PersonalChat = ({ currentUser, idSelected, message }) => {
           })}
         </div>
       </div>
-      <div className="h-[3rem] w-full bg-white flex gap-5 items-center px-5">
+      <div className="h-[3rem] bg-gray-300 rounded-br-3xl w-full flex sm:gap-5 gap-2 items-center sm:px-5 px-3">
         <BsEmojiSmile size={25} />
-        <AiOutlineLink size={25} onClick={(e) => setImg(e.target.files[0])} />
-        <div className="w-full flex gap-5 justify-between items-center">
+        <label htmlFor="uploadImg" className="">
+          <AiOutlineLink size={25} />
+          <input
+            id="uploadImg"
+            type="file"
+            onClick={(e) => e.target.files[0]}
+            className="hidden"
+          />
+        </label>
+        <div className="w-full flex sm:gap-5 gap-2 justify-between items-center">
           <input
             type="text"
             className="w-full h-10 outline-none px-2"
             placeholder="Write a message...."
-            onKeyDown={(e) => setText(e.target.value)}
+            onChange={(e) => setText(e.target.value)}
           />
           <AiOutlineSend size={25} onClick={handleSendMessage} />
         </div>

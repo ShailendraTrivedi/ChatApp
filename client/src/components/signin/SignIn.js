@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 const SignIn = ({ setFlag }) => {
   const navigate = useNavigate();
   const handleSubmit = async (values) => {
-    console.log(values);
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -18,8 +17,7 @@ const SignIn = ({ setFlag }) => {
       );
       const user = userCredential.user;
       localStorage.setItem("uid", JSON.stringify(user));
-      navigate("/");
-      console.log(user.uid);
+      navigate("/chat");
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -34,7 +32,7 @@ const SignIn = ({ setFlag }) => {
   };
 
   return (
-    <div className="w-[40rem] h-[40rem] bg-[rgb(0,171,228)] rounded">
+    <div className="sm:w-[30rem] w-full bg-white rounded p-2 m-2">
       <Formik
         initialValues={{
           userEmail: "",
@@ -44,7 +42,7 @@ const SignIn = ({ setFlag }) => {
       >
         {() => (
           <Form className="flex flex-col gap-10 justify-center items-center sm:p-5 h-full w-full">
-            <div className="w-[25rem] min-h-[20rem] space-y-5 bg-white rounded p-5">
+            <div className="w-full h-full space-y-5 rounded-2xl p-5">
               <div className="text-3xl text-center font-bold">Login</div>
               <div className="space-y-1">
                 <label htmlFor="" className="">
@@ -81,14 +79,15 @@ const SignIn = ({ setFlag }) => {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="bg-[rgb(0,171,228)] p-2 w-[10rem] text-white"
+                  className="bg-[rgb(0,171,228)] text-white p-2 w-[10rem]"
                 >
                   Login
                 </button>
               </div>
             </div>
+            <hr className="border-2 border-[rgb(0,171,228)] w-full" />
             <div
-              className="bg-white p-2 w-[10rem] text-center rounded cursor-pointer"
+              className="bg-[rgb(0,171,228)]  text-white p-2 w-[10rem] text-center rounded cursor-pointer"
               onClick={() => setFlag(false)}
             >
               Register
